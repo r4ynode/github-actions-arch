@@ -1,0 +1,11 @@
+name: Default Settings
+defaults: # デフォルトシェル。パイプエラーを拾えるようにbashの起動オプションを変更
+  run:
+    shell: bash
+concurrency: # 並列実行の抑制
+  group: ${{ github.workflow }}-${{ github.ref }} # <ワークフロー名>-<ブランチ名>
+  cancel-in-progress: true # 古いワークフローをキャンセル
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5 # タイムアウト
