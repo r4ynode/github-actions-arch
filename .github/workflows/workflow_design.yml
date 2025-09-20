@@ -42,6 +42,8 @@ jobs:
 
       - name: Job Summary
         run: |
-          echo "## Example Title: rocket:" >> "${GITHUB_STEP_SUMMARY}"
-          echo "- first line" >> "${GITHUB_STEP_SUMMARY}"
-          echo "- second line" >> "${GITHUB_STEP_SUMMARY}"
+          cat >> "${GITHUB_STEP_SUMMARY}" << 'EOF'
+          ## Example Title :rocket:
+          - first line
+          - second line
+          EOF
