@@ -33,3 +33,9 @@ jobs:
           echo "${PASSWORD}"
         env:
           PASSWORD: SuperSecretValue
+      
+      - name: Annotation Message
+        run: |
+          echo "::error::This is an error"
+          echo "::warning::This is an warning"
+          echo "::notice::This is an notice"
