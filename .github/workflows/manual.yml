@@ -28,3 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${EXAMPLE}"
+  intermediate-env:
+    runs-on: ubuntu-latest
+    env:
+      ACTOR: ${{ github.actor }} # コンテキストの値を環境変数にセット
+    steps:
+      - run: echo "${ACTOR}"
