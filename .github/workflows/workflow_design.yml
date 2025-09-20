@@ -26,3 +26,10 @@ jobs:
           echo "::group::Show env variables"
           printenv
           echo "::endgroup::"
+
+      - name: Mask Log
+        run: |
+          echo "::add-mask::${PASSWORD}"
+          echo "${PASSWORD}"
+        env:
+          PASSWORD: SuperSecretValue
