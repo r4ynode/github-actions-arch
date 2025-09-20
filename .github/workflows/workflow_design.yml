@@ -7,8 +7,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  log:
+    name: Log
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - run: echo "::debug::This is a debug log"
+      - name: Debug log
+        run: echo "::debug::This is a debug log"
+
+      - name: Tracing Log
+        run: |
+          set -x
+          date
+          hostname
