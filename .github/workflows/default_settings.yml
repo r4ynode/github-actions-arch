@@ -1,4 +1,5 @@
 name: Default Settings
+on: workflow_dispatch
 defaults: # デフォルトシェル。パイプエラーを拾えるようにbashの起動オプションを変更
   run:
     shell: bash
@@ -9,3 +10,5 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 5 # タイムアウト
+    steps:
+      - run: echo "hello"
