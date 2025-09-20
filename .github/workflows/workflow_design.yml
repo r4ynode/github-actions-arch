@@ -39,3 +39,9 @@ jobs:
           echo "::error::This is an error"
           echo "::warning::This is an warning"
           echo "::notice::This is an notice"
+
+      - name: Job Summary
+        run: |
+          echo "## Example Title: rocket:" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- first line" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- second line" >> "${GITHUB_STEP_SUMMARY}"
