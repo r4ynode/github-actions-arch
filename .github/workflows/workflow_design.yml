@@ -16,7 +16,13 @@ jobs:
         run: echo "::debug::This is a debug log"
 
       - name: Tracing Log
-        run: |
+        run: | # Bashのトレーシングオプションを有効化し実行したコマンドをログ出力
           set -x
           date
           hostname
+
+      - name: Group Log
+        run: | 
+          echo "::group::Show env variables"
+          printenv
+          echo "::endgroup::"
