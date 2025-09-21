@@ -73,3 +73,14 @@ jobs:
     steps:
       - run: echo "${RUNNER_OS}"
         shell: bash
+  mat2:
+    strategy: 
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        version: [18, 20]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: action/setup-node@v4
+        with:
+          node-version: ${{ matrix.version }}
+      - run: echo "${RUNNER_OS}" && node --version
