@@ -1,0 +1,42 @@
+name: Workflow Design2
+on: pull_request
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          key: test-${{ runner.os }}-${{ github.sha }}
+          path: ${{ github.workspace }}/dummy
+          restore-keys: |
+            test-${{ runner.os }}-
+      - run: |
+          if [[ -f "${GITHUB_WORKSPACE}/dummy" ]]; then exit 0; fi
+          dd if=/dev/urandom of="${GITHUB_WORKSPACE}/dummy" bs=1M count=10
+          sleep 30
+      - run: ls -lh "${GITHUB_WORKSPACE}/dummy"
+  artifact-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - run: date > date.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uploaded
+          path: date.txt
+          retention-days: 7
+  artifact-download:
+    runs-on: ubuntu-latest
+    needs: [artifact-upload]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: uploaded
+          path: downloaded
+      - run: cat downloaded/date.txt
