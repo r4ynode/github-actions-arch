@@ -98,3 +98,12 @@ jobs:
         with:
           node-version: ${{ matrix.version }}
       - run: echo "${RUNNER_OS}" && node --version
+  print-env:
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      USERNAME: ${{ vars.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+    steps:
+      - run: echo "${USERNAME}"
+      - run: echo "${USERNAME:0:1} ${PASSWORD#?}"
