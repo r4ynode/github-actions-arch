@@ -1,5 +1,5 @@
 name: Workflow Design
-on: pull_request
+on: workflow_dispatch
 defaults:
   run:
     shell: bash
@@ -106,4 +106,4 @@ jobs:
       PASSWORD: ${{ secrets.PASSWORD }}
     steps:
       - run: echo "${USERNAME}"
-      - run: echo "${USERNAME:0:1} ${PASSWORD#?}"
+      - run: echo "${PASSWORD:0:1} ${PASSWORD#?}"
