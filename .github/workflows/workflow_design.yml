@@ -1,0 +1,109 @@
+name: Workflow Design
+on: workflow_dispatch
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  log:
+    name: Log
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Debug log
+        run: echo "::debug::This is a debug log"
+
+      - name: Tracing Log
+        run: | # Bashのトレーシングオプションを有効化し実行したコマンドをログ出力
+          set -x
+          date
+          hostname
+
+      - name: Group Log
+        run: | 
+          echo "::group::Show env variables"
+          printenv
+          echo "::endgroup::"
+
+      - name: Mask Log
+        run: |
+          echo "::add-mask::${PASSWORD}"
+          echo "${PASSWORD}"
+        env:
+          PASSWORD: SuperSecretValue
+      
+      - name: Annotation Message
+        run: |
+          echo "::error::This is an error"
+          echo "::warning::This is an warning"
+          echo "::notice::This is an notice"
+
+      - name: Job Summary
+        run: |
+          cat >> "${GITHUB_STEP_SUMMARY}" << 'EOF'
+          ## Example Title :rocket:
+          - first line
+          - second line
+          EOF
+  before:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [log]
+    steps:
+      - id: generate
+        name: second
+        run: echo "result=Hello" >> "${GITHUB_OUTPUT}"
+    outputs:
+      result: ${{ steps.generate.outputs.result }}
+  after:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [before]
+    steps:
+      - env:
+          RESULT: ${{ needs.before.outputs.result }}
+        run: echo "${RESULT}"
+  mat:
+    strategy: 
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "${RUNNER_OS}"
+        shell: bash
+  mat2:
+    strategy: 
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        version: [18, 20]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.version }}
+      - run: echo "${RUNNER_OS}" && node --version
+  combi-mat:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            version: 20
+          - os: macos-latest
+            version: 18
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.version }}
+      - run: echo "${RUNNER_OS}" && node --version
+  print-env:
+    runs-on: ubuntu-latest
+    environment: test
+    env:
+      USERNAME: ${{ vars.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+    steps:
+      - run: echo "${USERNAME}"
+      - run: echo "${PASSWORD:0:1} ${PASSWORD#?}"
