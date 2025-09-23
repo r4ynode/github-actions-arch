@@ -7,3 +7,8 @@ changelog:
       labels:
         - bug
         - fixes
+  exclude:                # リリースノートの除外設定
+    labels:               # 除外するラベル
+      - dependencies
+    authors:              # 除外するPR作成者
+      - dependabot
